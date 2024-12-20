@@ -27,11 +27,16 @@ export default function LoginPage() {
 
     try {
       setLoading(true);
-      const response = await login(formData.email, formData.password);
-      localStorage.setItem("token", response.accessToken);
-      router.push("/dashboard");
+      const data = await login(formData.email, formData.password);
+
+      if (data.access_token) {
+        localStorage.setItem("token", data.access_token);
+        router.push("/dashboard");
+      } else {
+        throw new Error("Login failed");
+      }
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "An error occurred during login");
     } finally {
       setLoading(false);
     }

@@ -5,7 +5,7 @@ export const register = async (
   email: string,
   password: string
 ) => {
-  const res = await fetch(`${API_URL}/register`, {
+  const res = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, email, password }),
@@ -13,13 +13,15 @@ export const register = async (
 
   if (!res.ok) {
     const error = await res.json();
-    throw new Error(error.message);
+    throw new Error(error.message || "Registration failed");
   }
-  return res.json();
+
+  const data = await res.json();
+  return data;
 };
 
 export const login = async (email: string, password: string) => {
-  const res = await fetch(`${API_URL}/login`, {
+  const res = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -27,7 +29,9 @@ export const login = async (email: string, password: string) => {
 
   if (!res.ok) {
     const error = await res.json();
-    throw new Error(error.message);
+    throw new Error(error.message || "Login failed");
   }
-  return res.json();
+
+  const data = await res.json();
+  return data;
 };
